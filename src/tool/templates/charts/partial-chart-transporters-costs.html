@@ -1,0 +1,78 @@
+<div hx-target="this" hx-swap="outerHTML">
+    <h2>Charts</h2>
+
+
+    <div id="charts" style="width: 50%; height: 50%; background-color:#CCF0E4">
+    <canvas id="myChart" width="200" height="200"></canvas>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in transporters %}'{{item}}',{% endfor %}],
+                datasets: [{
+                    label: 'Supplement paid per transporter',
+                    data: [{% for item in supplement_costs %}{{ item|safe }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgb(92,196,180)',
+                    ],
+                    borderColor: [
+                        'rgb(88,185,170)',
+                    ],
+                    borderWidth: 1,
+
+                },{
+                    label: 'Total prices per transporter',
+                    data: [{% for item in total_costs %}{{ item|safe }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgb(254,133,110)',
+                    ],
+                    borderColor: [
+                        'rgb(234,121,100)',
+                    ],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        fullSize: true,
+                        text: 'Total costs per transporter',
+                        font: {
+                            size: 24,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        },
+                        grid: {
+                            display:false
+                        }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display:false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    </div>
+
+</div>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Menu TBD</h1>
+
+    {% for supplement in supplements %}
+        <ul>
+            <li><a href="{% url 'tool:edit-transporter' slug=supplement.slug %}">{{ supplement.transporter }}</a></li>
+        </ul>
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Menu TBD</h1>
+
+<h2>Editer les tarifs</h2>
+
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Enregistrer">
+    </form>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Menu TBD</h1>
+
+    <h2>Liste des rapports</h2>
+
+    {% if nb_reports == 0 %}
+    <p>Vous n'avez actuellement créé aucun rapport. <a href="{% url 'tool:create-report' %}">Cliquez ici</a> pour en
+        créer un.</p>
+    {% else %}
+    {% for report in reports %}
+        <a href="{% url 'tool:single-report' slug=report.slug %}">{{ report.title }}</a>
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}

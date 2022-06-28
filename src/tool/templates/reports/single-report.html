@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Menu TBD</h1>
+
+    {{ exception.message }}
+
+    <h2>Uploader fichier company</h2>
+    {% if check_company_file %}
+        <p>Le fichier existe déjà. Souhaitez-vous le supprimer ?</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ company_file_delete_form }}
+            <input type="hidden" name="delete_company_file" value="delete_company_file">
+            <button type="submit">Delete</button>
+        </form>
+    {% else %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ company_form }}
+        </form>
+    {% endif %}
+
+    <h2>Uploader fichier transporteur</h2>
+
+    {% for transporter in transporters %}
+        {% if transporter in missing_transporters %}
+            <h4>{{ transporter }}</h4>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ transporter_form }}
+                <input type="hidden" name="transporter_name" value="{{ transporter }}"
+                       id="transporter_name">
+            </form>
+        {% else %}
+            <h4>{{ transporter }}</h4>
+            <form method="post">
+                {% csrf_token %}
+                {{ transporter_file_delete_form }}
+                <input type="hidden" name="transporter_name" value="{{ transporter }}"
+                       id="transporter_name">
+                <input type="hidden" name="delete_transporter_file" value="delete_transporter_file">
+                <button type="submit">Delete</button>
+
+            </form>
+            <p>Fichier déjà uploadé</p>
+        {% endif %}
+    {% endfor %}
+
+    <h2>Résultats</h2>
+    <ul>
+        <li><h3>Coût théorique total</h3></li>
+        <li>{{ theorical_costs }}</li>
+        <li><h3>Coût réel total calculé par Expancy</h3></li>
+        <li>{{ total_calculated_costs }}</li>
+        <li><h3>Coût suppléments</h3></li>
+        <li>{{ total_supplements }}</li>
+        <li><h3>Divergences</h3></li>
+        <li>{{ total_discrepancies }}</li>
+    </ul>
+
+    {#    {% include "charts/partial-chart-transporters-costs.html" %}#}
+    {#    <div hx-get="{% url 'tool:chart-transporters' %}" hx-target="#charts" hx-swap="beforeend" hx-trigger="load">#}
+    {#    <div id="charts"></div>#}
+    {#    </div>#}
+    <h2>Charts</h2>
+    <div id="charts" style="width: 50%; height: 50%; background-color:#CCF0E4">
+    <canvas id="myChart" width="200" height="200"></canvas>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in chart_transporters %}'{{item}}',{% endfor %}],
+                datasets: [{
+                    label: 'Supplement paid per transporter',
+                    data: [{% for item in total_supplements %}{{ item|safe }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgb(92,196,180)',
+                    ],
+                    borderColor: [
+                        'rgb(88,185,170)',
+                    ],
+                    borderWidth: 1,
+
+                },{
+                    label: 'Total prices per transporter',
+                    data: [{% for item in theorical_costs %}{{ item|safe }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgb(254,133,110)',
+                    ],
+                    borderColor: [
+                        'rgb(234,121,100)',
+                    ],
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Total prices calculated by Expancy',
+                    data: [{% for item in total_calculated_costs %}{{ item|safe }}, {% endfor %}],
+                    backgroundColor: [
+                        'rgb(107,13,74)',
+                    ],
+                    borderColor: [
+                        'rgb(93,11,64)',
+                    ],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        fullSize: true,
+                        text: 'Total costs per transporter',
+                        font: {
+                            size: 24,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                            }
+                        },
+                        grid: {
+                            display:false
+                        }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display:false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    </div>
+
+    <h2>Télécharger le rapport</h2>
+    <a href={% url 'tool:download-report' %}>Télécharger le rapport</a>
+
+
+{% endblock %}
