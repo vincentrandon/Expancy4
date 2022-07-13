@@ -1,0 +1,25 @@
+{% load custom_tags %}
+
+<div class="bg-gray-100 p-6 rounded-3xl">
+    <h3>Importer le fichier de commandes</h3>
+    <div class="flex bg-white rounded-lg p-3 justify-between mt-2">
+        <div class="space-y-1 text-center">
+            {% if check_company_file %}
+                <p>Le fichier existe déjà. Souhaitez-vous le supprimer ?</p>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ company_file_delete_form }}
+                    <input type="hidden" name="delete_company_file" value="delete_company_file">
+                    <button type="submit">Delete</button>
+                </form>
+            {% else %}
+                <form method="POST" enctype="multipart/form-data">
+                    <label for type="file">Choose file</label>
+                    {% csrf_token %}
+                    {{ company_form }}
+                </form>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

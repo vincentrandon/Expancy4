@@ -19,6 +19,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField('date joined', auto_now_add=True)
     company = models.ForeignKey('Company', on_delete=DO_NOTHING, blank=True, null=True)
     brand = models.ForeignKey('Brand', on_delete=DO_NOTHING, blank=True, null=True)
+    avatar = models.FileField('Avatar', blank=True)
     is_active = models.BooleanField('active', default=True)
     is_staff = models.BooleanField('staff status', default=False)
     is_superuser = models.BooleanField(default=False)
@@ -32,6 +33,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
+
+
 
     def get_full_name(self):
         '''
@@ -63,6 +66,8 @@ class Transporter(models.Model):
 
     name = models.CharField(max_length=100)
     avatar = models.ImageField(blank=True, null=True)
+    avatar_file_to_upload = models.ImageField(blank=True, null=True)
+    avatar_file_uploaded = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.name

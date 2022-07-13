@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+    <div class="flex-1 flex items-stretch overflow-y-auto"
+         x-data="{ tab: window.location.hash ? window.location.hash.substring(1) : 'account' }" id="tab_wrapper">
+        <div class="flex-1 pt-8 pb-5 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="pb-10">
+                <div class="border-b border-gray-200">
+                    <nav class="flex space-x-10" aria-label="Tabs">
+                        <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
+                        <a class="text-3xl"
+                           href="#"
+                           :class="{ 'active': tab === 'account' }"
+                           @click.prevent="tab = 'account'; window.location.hash = 'account'"
+                           aria-current="page">
+                            My Account </a>
+
+                        <a :class="{ 'active': tab === 'password' }"
+                           @click.prevent="tab = 'password'; window.location.hash = 'password'" href="#"
+                           class="">
+                            Password </a>
+
+                    </nav>
+                </div>
+            </div>
+
+            <div class="w-100 mb-10" x-show="tab === 'account'">
+                <div>
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Profile</h3>
+                        <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be
+                            careful
+                            what you share.</p>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-8 sm:grid-cols-6">
+
+
+                        <div class="sm:col-span-6">
+                            <label for="photo" class="block text-sm font-medium text-gray-700"> Photo </label>
+                            <div class="mt-1 flex items-center">
+            <span class="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
+                {% if not request.user.avatar %}
+                    <img src="{% static 'tool/unknown_avatar.jpeg' %}" alt="unknown">
+                {% else %}
+                    <img src="{{ request.user.avatar.url }}">
+                {% endif %}
+            </span>
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ avatar_form.avatar }}
+                                    <input type="hidden" name="avatar_form" value="avatar_form">
+
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="pt-8">
+                        <div>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Personal Information</h3>
+                            <p class="mt-1 text-sm text-gray-500">Use a permanent address where you can receive
+                                mail.</p>
+                        </div>
+                        <div class="mt-6 grid grid-cols-1 gap-y-12 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="first-name" class="block text-sm font-medium text-gray-700"> First
+                                    name </label>
+                                <div class="mt-1">
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+
+                            <div class="mt-2 sm:col-span-3">
+                                <label for="last-name" class="block text-sm font-medium text-gray-700"> Last
+                                    name </label>
+                                <div class="mt-1">
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+
+                            <div class="mt-2 sm:col-span-4">
+                                <label for="email" class="block text-sm font-medium text-gray-700"> Email
+                                    address </label>
+                                <div class="mt-1">
+                                    {{ form.email }}
+                                </div>
+                            </div>
+
+                            <div class="mt-2 sm:col-span-3">
+                                <label for="country" class="block text-sm font-medium text-gray-700"> Company </label>
+                                <div class="mt-1">
+                                    {{ form.company }}
+                                </div>
+                            </div>
+
+                            <div class="mt-2 sm:col-span-6">
+                                <label for="street-address" class="block text-sm font-medium text-gray-700">
+                                    Brand </label>
+                                <div class="mt-1">
+                                    {{ form.brand }}
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="pt-5 pb-5">
+                        <div class="flex">
+                            <button type="button"
+                                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Save
+                            </button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Password -->
+
+            <div x-show="tab === 'password'">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="pt-8">
+                        <input type="hidden" name="password_form" value="password_form">
+
+                        <div>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Change password</h3>
+                            <p class="mt-1 text-sm text-gray-500">Choose a good password.</p>
+                        </div>
+                        <div class="mt-6 grid grid-cols-1 gap-y-12 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-3">
+                                <label for="first-name" class="block text-sm font-medium text-gray-700"> Password </label>
+                                <div class="mt-1">
+                                    {{ password_form }}
+
+                                </div>
+                            </div
+                        </div>
+
+                    </div>
+
+                    <div class="pt-5 pb-5">
+                        <div class="flex">
+                            <button type="button"
+                                    class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Save
+                            </button>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

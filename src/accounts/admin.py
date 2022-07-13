@@ -2,18 +2,28 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from accounts.models import User, Company, CompanyDetailsIntegration, Brand, Transporter
+from notis.models import NotificationSeenByUser
 
 ''' USERS '''
+
+class AdminNotificationSeenByUser(admin.TabularInline):
+    model = NotificationSeenByUser
+
 class CustomUserAdmin(admin.ModelAdmin):
 
     def change_button(self, obj):
         return format_html('<a class="btn" href="/admin/accounts/user/{}/change/">Edit</a>', obj.id)
 
     list_display = ['email', 'first_name', 'last_name', 'change_button']
+    readonly_fields = ('date_joined',)
+    inlines = [AdminNotificationSeenByUser]
     #list_filter = ['email']
     model = User
 
 admin.site.register(User, CustomUserAdmin)
+
+
+
 
 
 ''' COMPANIES -> DETAILS INTEGRATION '''
