@@ -16,8 +16,8 @@
                         <div class="flex">
                             <!-- Company form -->
                             <div class="bg-gray-100 p-6 rounded-3xl">
-                                <h3>Importer le fichier de commandes</h3>
-                                <div class="flex bg-white rounded-lg p-3 justify-between mt-2">
+                                <span class="text-lg font-medium">Importer le fichier de commandes</span>
+                                <div class="flex p-3 justify-center mt-2">
                                     <div class="space-y-1 text-center">
                                         {% if check_company_file %}
                                             <form method="POST" enctype="multipart/form-data">
@@ -25,15 +25,35 @@
                                                 {{ company_file_delete_form }}
                                                 <input type="hidden" name="delete_company_file"
                                                        value="delete_company_file">
-                                                <button type="submit">Delete</button>
+                                                <button type="submit"
+                                                        class="items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                         stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                              d="M18 12H6"/>
+                                                    </svg>
+
+                                                </button>
                                             </form>
                                         {% else %}
                                             <form method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="company_form"
                                                        value="company_form">
-                                                <label for type="file">Choose file</label>
+
                                                 {% csrf_token %}
                                                 {{ company_form.file }}
+                                                <input type="file" id="company_file" hidden="hidden"/>
+                                                <button type="button" id="custom-button-company-file"
+                                                        class="items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                                    <!-- Heroicon name: solid/plus-sm -->
+                                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path fill-rule="evenodd"
+                                                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                              clip-rule="evenodd"/>
+                                                    </svg>
+                                                </button>
                                             </form>
                                         {% endif %}
 
@@ -41,7 +61,7 @@
                                 </div>
                             </div>
                             <!-- Transporter form -->
-                            <div class="flex-1 ml-5 bg-gray-100 rounded-3xl sm:flex">
+                            <div class="flex-1 ml-5 bg-gray-100 rounded-3xl overflow-x-auto sm:flex">
                                 <div class="flex bg-[#195266] rounded-3xl p-3 items-center">
                                     <h3 class="pl-5 pr-5 text-center text-white">Importer les fichiers <br>des
                                         transporteurs</h3>
@@ -51,32 +71,51 @@
                                         {% if transporter in missing_transporters %}
                                             <form method="post" enctype="multipart/form-data">
                                                 {% csrf_token %}
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-lg font-medium bg-green-100 text-green-800">{{ transporter }}</span>
-                                                {{ transporter_form.file }}
+                                                <div class="flex flex-col items-center space-y-5">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">{{ transporter }}</span>
+                                                    {{ transporter_form.file }}
 
-                                                <input type="file" id="transporter_file" hidden="hidden"/>
-{#                                                <button type="button" id="custom-button"#}
-{#                                                        class="bg-[#68BA9E] text-white font-bold py-2 px-4 rounded-full">#}
-{#                                                    Upload#}
-{#                                                </button>#}
-                                                <input type="hidden" name="transporter_form"
-                                                       value="transporter_form">
-                                                <input type="hidden" name="transporter_name"
-                                                       value="{{ transporter }}"
-                                                       id="transporter_name">
+                                                    <input type="file" id="transporter_file" hidden="hidden"/>
+                                                    <button type="button" id="custom-button"
+                                                            class="items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                                        <!-- Heroicon name: solid/plus-sm -->
+                                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                             viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path fill-rule="evenodd"
+                                                                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                                                  clip-rule="evenodd"/>
+                                                        </svg>
+                                                    </button>
+                                                    <input type="hidden" name="transporter_form"
+                                                           value="transporter_form">
+                                                    <input type="hidden" name="transporter_name"
+                                                           value="{{ transporter }}"
+                                                           id="transporter_name">
+                                                </div>
 
                                             </form>
                                         {% else %}
-                                            <h4>{{ transporter }}</h4>
                                             <form method="post">
                                                 {% csrf_token %}
-                                                {{ transporter_file_delete_form }}
-                                                <input type="hidden" name="transporter_name"
-                                                       value="{{ transporter }}"
-                                                       id="transporter_name">
-                                                <input type="hidden" name="delete_transporter_file"
-                                                       value="delete_transporter_file">
-                                                <button type="submit">Delete</button>
+                                                <div class="flex flex-col items-center space-y-5">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-lg font-medium bg-blue-100 text-blue-800">{{ transporter }}</span>
+
+                                                    {{ transporter_file_delete_form }}
+                                                    <input type="hidden" name="transporter_name"
+                                                           value="{{ transporter }}"
+                                                           id="transporter_name">
+                                                    <input type="hidden" name="delete_transporter_file"
+                                                           value="delete_transporter_file">
+                                                    <button type="submit"
+                                                            class="items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                             fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                             stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M18 12H6"/>
+                                                        </svg>
+
+                                                    </button>
 
                                             </form>
                                         {% endif %}
@@ -131,10 +170,56 @@
                         </div>
                     </div>
                 </section>
+                <section class="pb-10" aria-labelledby="gallery-heading">
+                    <div class="flex flex-row space-x-5">
+                        <div class="basis-1/2 bg-[#CCF0E4] rounded-3xl">
+                            <div class="py-3 px-5">Divergences</div>
+                            <canvas class="p-5" id="chartBar"></canvas>
+                        </div>
+                        <div class="basis-1/2 items-center">
+                            <div class="flex flex-row justify-between">
+                                <div class="flex flex-col justify-between">
+                                    <div class="flex flex-row items-center space-x-2 pb-2">
+                                        <div>
+                                            <canvas id="chartDoughnut" height="125px" width="125px"></canvas>
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <h4 class="text-xl">Avoirs demandés</h4>
+                                            <span class="text-xl text-[#6385ca] font-bold">12 678€</span>
+                                        </div>
+                                        <div>
+                                            <canvas id="chartDoughnut2" height="125px" width="125px"></canvas>
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <h4 class="text-xl">Avoirs acceptés</h4>
+                                            <span class="text-xl text-[#21b785] font-bold">2 349€</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row items-center space-x-2">
+                                        <div>
+                                            <canvas id="chartDoughnut3" height="125px" width="125px"></canvas>
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <h4 class="text-xl">Avoirs refusés</h4>
+                                            <span class="text-xl text-[#FE856E] font-bold">3 459€</span>
+                                        </div>
+                                        <div>
+                                            <canvas id="chartDoughnut4" height="125px" width="125px"></canvas>
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <h4 class="text-xl">Avoirs en cours</h4>
+                                            <span class="text-xl text-[#FFE46D] font-bold">3 459€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </section>
+
+
             </div>
         </main>
 
-        <aside class="w-80 bg-[#68ba9f] p-8 rounded-3xl overflow-y-auto lg:block">
+        <aside class="w-60 bg-[#68ba9f] p-8 rounded-3xl m-10 overflow-y-auto lg:block">
             <div class="pb-16 items-center">
                 <div class="text-center pb-5">
                     <span class="p-3 bg-[#195266] rounded-full text-white">Mars 2022</span>
@@ -188,7 +273,7 @@
 
     </div>
 
-
+    <!-- SCRIPT TRANSPORTER FILE -->
     <script>
         const transporterFile = document.getElementById('transporter_file');
         const customButton = document.getElementById('custom-button');
@@ -197,6 +282,59 @@
             transporterFile.click();
         });
 
+    </script>
+    <!-- SCRIPT COMPANY FILE -->
+    <script>
+        const companyFile = document.getElementById('company_file');
+        const customButtonCompanyFile = document.getElementById('custom-button-company-file');
+
+        customButtonCompanyFile.addEventListener('click', function () {
+            companyFile.click();
+        });
+
+    </script>
+    <!-- SCRIPT CHART DIVERGENCES -->
+    <script>
+        const labelsBarChart = [{% for transporter in transporters %}'{{transporter}}',{% endfor %}];
+        const dataBarChart = {
+            labels: labelsBarChart,
+            datasets: [
+                {
+                    label: "Prix facturés",
+                    backgroundColor: "hsl(171,47%,56%)",
+                    borderColor: "hsl(171,47%,56%)",
+                    data: [25000, 12000, 8000],
+                },
+                {
+                    label: 'Prix théoriques',
+                    data: [80000, 120000, 160000],
+                    backgroundColor: [
+                        'rgb(254,133,110)',
+                    ],
+                    borderColor: [
+                        'rgb(234,121,100)',
+                    ],
+                    borderWidth: 1,
+                },
+            ],
+        };
+
+        const configBarChart = {
+            type: "bar",
+            data: dataBarChart,
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            },
+        };
+
+        var chartBar = new Chart(
+            document.getElementById("chartBar"),
+            configBarChart
+        );
     </script>
 
 {% endblock %}
